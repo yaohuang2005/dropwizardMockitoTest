@@ -1,0 +1,54 @@
+// Apply the java plugin to add support for Java
+apply plugin: 'java'
+apply plugin: 'idea'
+
+// Use Java 7 by default
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+// Set our project variables
+project.ext {
+    dropwizardVersion = '2.0.12'
+    junitVersion = '4.12'
+    hamcrestVersion = '1.3'
+    mockitoVersion = '2.28.2'
+}
+// In this section you declare where to find the dependencies of your project
+repositories {
+    mavenCentral()
+}
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    compile (
+            'io.dropwizard:dropwizard-core:' + dropwizardVersion,
+            'io.dropwizard:dropwizard-testing:' + dropwizardVersion,
+            'org.slf4j:slf4j-api:1.7.30'
+    )
+    testCompile "junit:junit:4.11"
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.hamcrest:hamcrest-all:$hamcrestVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+}
+
+
+
+apply plugin: 'application'
+
+// The main class of the application
+mainClassName = 'com.example.helloworld.HelloWorldApplication'
+
+// Configure the run task to start the Dropwizard service
+run {
+    args 'server', 'hello-world.yml'
+}
+
+test {
+    // show standard out and standard error of the test JVM(s) on the console
+    testLogging {
+        showStandardStreams = true
+        displayGranularity = 2
+        exceptionFormat = 'full'
+        events 'started', 'passed'
+    }
+}
